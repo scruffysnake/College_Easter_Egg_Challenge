@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 
 public static class Easter
 {
@@ -23,7 +25,6 @@ public static class Easter
     static void Trial1()
         => Console.WriteLine(@"
 Trial 1:
-
 I received an encrypted message from the easter bunny, but the key was never received!!!
 I heard somewhere that the easter bunny is a fan of Caesar Ciphers, 
 so I feel it's best to decipher it as a Caesar Cipher.
@@ -37,7 +38,6 @@ Using brute force might be a smart way to solve the message.
     static void HintTrial1()
         => Console.WriteLine(@"
 Trial 1 hint:
-
 You can offset a character by adding a number to it:
     ""'b' == 'a' + 1"" is true and valid syntax
     
@@ -72,6 +72,49 @@ The magnitude of the offset is below 10
         CurrentTrial = Trials.TRIAL2;
         return true;
     }
+    // Trial 2 (Factorial)
+    static void Trial2()
+        => Console.WriteLine(@"
+Trial2:
+Well done for completing trial 1, I can finnally understand the message.
+
+I now need your help figuring out all possible arangments of easter egg hiding locations!
+
+Can you please submit a function that calculates the factorial of a given number?
+This function needs to be able to take an integer as an argument and output a integer.
+
+Heres an example of how to submit a function:
+    bool isEven(int n)
+    {
+        return n % 2 == 0;
+    }
+    Easter.Submit(isEven);
+                // ^ just need to write the same of the function as an argument
+        ");
+    static void HintTrial2()
+        => Console.WriteLine(@"
+Trial 2 hint:
+Consider using recusion to create the factorial function
+        ");
+    static bool SubmitTrial2(Func<int, int> fn)
+    {
+        Console.WriteLine("Running trial 2 test cases");
+        int Factorial(int n) => Enumerable.Range(1, n).Aggregate(1, (a, b) => a * b);
+        for (int i = 1; i <= 10; i++)
+        {
+            int userAns = fn(i);
+            int realAns = Factorial(i);
+            if (userAns != realAns) 
+            {
+                Console.WriteLine($"Test {i} Failed! Got {userAns} instead of {realAns}");
+                return false;
+            }
+            Console.WriteLine($"Test {i} valided successfully.");
+        }
+        Console.WriteLine("\nTrial 2: your function works!\nWell done :)\n\nTrial 3 is now available; run Easter.Trial() for information about it\n");
+        CurrentTrial = Trials.TRIAL3;
+        return true;
+    }
 
     // Public variables
     public static string Key 
@@ -88,6 +131,7 @@ The magnitude of the offset is below 10
     // Public Functions
     public static void Help()
         => Console.WriteLine(@"
+Help:
 There are 3 trials to solve to find the secret message!
 After solving each trial, the information for the next trial will be released.
     
@@ -110,6 +154,7 @@ Note: you do not need to include Easter when running the functions
         switch(CurrentTrial)
         {
             case Trials.TRIAL1: Trial1(); return;
+            case Trials.TRIAL2: Trial2(); return;
         }
     }
     public static void Hint()
@@ -117,6 +162,7 @@ Note: you do not need to include Easter when running the functions
         switch(CurrentTrial)
         {
             case Trials.TRIAL1: HintTrial1(); return;
+            case Trials.TRIAL2: HintTrial2(); return;
         }
     }
     public static bool Submit(object answer)
@@ -124,7 +170,22 @@ Note: you do not need to include Easter when running the functions
         switch(CurrentTrial)
         {
             case Trials.TRIAL1: return SubmitTrial1(answer);
+            case Trials.TRIAL2: 
+                Console.WriteLine("Trial 2 only takes a function (with an int param and output)\n\t(e.g.) int f(int x);");
+                return false;
         }
         return false;
+    }
+    // Alias used as object cannot take function as argument 🤷‍♀️
+    // Confuses me a bit as it seems to work in another part of the code
+    // Eddited the code that uses that though
+    public static bool Submit(Func<int, int> userFunc)
+    {
+        if (CurrentTrial != Trials.TRIAL2) 
+        {
+            Console.WriteLine("Only trial 2 expects a function to be submitted");
+            return false;
+        }
+        return SubmitTrial2(userFunc);
     }
 }

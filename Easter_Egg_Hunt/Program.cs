@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using static Easter;
 
@@ -30,6 +31,26 @@ namespace EASTER_EGG_HUNT
             Trial();
             var n = -10;
             while (!Submit(string.Join("", Key.Select(c => (char)(c + n))))) n++;
+
+            Trial();
+            //int fn(int i) => i < 2 ? 1 : i * fn(i-1);
+            Dictionary<int, int> Fac = new Dictionary<int, int>
+            { 
+                {0, 1},
+                {1, 1},
+                {2, 2},
+                {3, 6},
+                {4, 24},
+                {5, 120},
+                {6, 720},
+                {7, 5040},
+                {8, 40320},
+                {9, 362880},
+                {10, 3628800}
+            };
+            Func<int, int> fn = (i) => Fac[i];
+            Submit(5);
+            Submit(fn);
         }
     }
 }
