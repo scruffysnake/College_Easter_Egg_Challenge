@@ -10,11 +10,14 @@ public static class Easter
         TRIAL1, 
         TRIAL2, 
         TRIAL3, 
-        TRIAL4,
+        COMPLETE
     }
     // Trial 1 (Caesar)
     const string KEY1 = "^tz,wj%f%ltti%jll";
     const string SOL1 = "You're a good egg";
+
+    // Trial 3 (First 10 digit fib)
+    const int SOL3 = 1134903170; // Look at Helper_Generate_Questions for how this number was generated
 
     // Private variables
     static string KeyReal = KEY1;
@@ -75,8 +78,8 @@ The magnitude of the offset is below 10
     // Trial 2 (Factorial)
     static void Trial2()
         => Console.WriteLine(@"
-Trial2:
-Well done for completing trial 1, I can finnally understand the message.
+Trial 2:
+Well done for completing trial 1, I can finally understand the message (tysm)
 
 I now need your help figuring out all possible arangments of easter egg hiding locations!
 
@@ -94,7 +97,9 @@ Heres an example of how to submit a function:
     static void HintTrial2()
         => Console.WriteLine(@"
 Trial 2 hint:
-Consider using recusion to create the factorial function
+Consider using recusion to create the factorial function.
+And using this formula:
+    n! = n * (n-1) * (n-2) .. 2 * 1
         ");
     static bool SubmitTrial2(Func<int, int> fn)
     {
@@ -115,6 +120,57 @@ Consider using recusion to create the factorial function
         CurrentTrial = Trials.TRIAL3;
         return true;
     }
+    // Trial 3 (First 10 digit fib)
+    static void Trial3()
+        => Console.WriteLine(@"
+Trial 3:
+Well done for completing trial 2, now I know the number of possible permutations of easter egg hiding locations!!
+
+Now the third and final trial, what is the first number within fibonacci sequence that contains 10 digits?
+Please submit it as an integer
+        ");
+    static void HintTrial3()
+        => Console.WriteLine(@"
+Trial 3 hint:
+The clasic fibonacci fomula is:
+    F(1) = 1
+    F(2) = 1
+    F(n) = F(n - 1) + F(n - 2) where n is greater than 2
+
+Brute forcing may be slow while using recursion.
+You could consider using an iterative methord or searching up a formula
+
+To get the number of digits within a number, 2 good methods include:
+    converting the number to a string, and checking the length of the string
+    calculating the log (base 10) of the number
+        ");
+    static bool SubmitTrial3(object ans)
+    {
+        int n = 1;
+        try
+        {
+            n = Convert.ToInt32(ans);
+        }
+        catch
+        {
+            Console.WriteLine("You have to submit an integer");
+            return false;
+        }
+        if (n.ToString().Length != 10) 
+        {
+            Console.WriteLine($"The number has to be 10 digits long: {n} is {n.ToString().Length} digits long");
+            return false;
+        }
+        if (n == SOL3)
+        {
+            CurrentTrialReal = Trials.COMPLETE;
+            Console.WriteLine($"\nTrial 3: you got the first 10 digit number in the fibonacci sequence {n}\n{CompletionText()}");
+        }
+        return n == SOL3;
+    }
+    // Idk why I made this a function instead of a constant, but not worth the effort to change it
+    static string CompletionText()
+        => "Well done for completing all the trials!\nHope you had a good time going to the programming enrichment\nThank you for attending :)";
 
     // Public variables
     public static string Key 
@@ -155,6 +211,8 @@ Note: you do not need to include Easter when running the functions
         {
             case Trials.TRIAL1: Trial1(); return;
             case Trials.TRIAL2: Trial2(); return;
+            case Trials.TRIAL3: Trial3(); return;
+            case Trials.COMPLETE: Console.WriteLine(CompletionText()); return;
         }
     }
     public static void Hint()
@@ -163,7 +221,9 @@ Note: you do not need to include Easter when running the functions
         {
             case Trials.TRIAL1: HintTrial1(); return;
             case Trials.TRIAL2: HintTrial2(); return;
+            case Trials.TRIAL3: HintTrial3(); return;
         }
+        Console.WriteLine(CompletionText());
     }
     public static bool Submit(object answer)
     {
@@ -173,7 +233,9 @@ Note: you do not need to include Easter when running the functions
             case Trials.TRIAL2: 
                 Console.WriteLine("Trial 2 only takes a function (with an int param and output)\n\t(e.g.) int f(int x);");
                 return false;
+            case Trials.TRIAL3: return SubmitTrial3(answer);
         }
+        Console.WriteLine(CompletionText());
         return false;
     }
     // Alias used as object cannot take function as argument 🤷‍♀️

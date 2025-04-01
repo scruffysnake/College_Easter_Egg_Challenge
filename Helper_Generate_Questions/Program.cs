@@ -22,7 +22,21 @@
 
         // Trial 3 (Fib)
         {
-
+            // Memoization
+            Dictionary<int, int> Memo = new Dictionary<int, int> { {0, 1}, {1, 1} };
+            int fib(int n)
+            {
+                if (Memo.ContainsKey(n)) return Memo[n];
+                Memo.Add(n, fib(n - 1) + fib (n - 2));
+                return Memo[n];
+            }
+            int n = 0;
+            for (int i = 0; i != -1; i++)
+            {
+                n = fib(i);
+                if (n.ToString().Length >= 10) break;
+            }
+            Console.WriteLine(n);
         }
     }
 }
