@@ -1,5 +1,5 @@
 # College Easter Egg Challenge
-Sorry this readme is not detailed, only plan to use this once ¯\_(ツ)_/¯
+Sorry this readme is not detailed, only plan to use this once ¯\\_(ツ)_/¯
 
 This is a small collection of basic programming easter themed coding challenges.
 
